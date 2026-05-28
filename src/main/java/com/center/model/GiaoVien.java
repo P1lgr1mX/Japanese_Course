@@ -1,13 +1,9 @@
 package com.center.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "GiaoVien")
-@Getter
-@Setter
 public class GiaoVien {
     @Id
     @Column(name = "MaGV", length = 10)
@@ -21,4 +17,36 @@ public class GiaoVien {
 
     @Column(name = "ChuyenMon", nullable = false, length = 100)
     private String chuyenMon;
+
+    public String getMaGV() {
+        return maGV;
+    }
+
+    public void setMaGV(String maGV) {
+        this.maGV = maGV;
+    }
+
+    public String getHoTen() {
+        return hoTen;
+    }
+
+    public void setHoTen(String hoTen) {
+        this.hoTen = hoTen;
+    }
+
+    public String getTrinhDo() {
+        return trinhDo;
+    }
+
+    public void setTrinhDo(String trinhDo) {
+        this.trinhDo = trinhDo;
+    }
+
+    public String getChuyenMon() {
+        return chuyenMon;
+    }
+
+    public void setChuyenMon(String chuyenMon) {
+        this.chuyenMon = chuyenMon;
+    }
 }

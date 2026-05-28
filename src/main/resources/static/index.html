@@ -1,55 +1,775 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japanese Language Center Management</title>
+    <title>Japanese Center Admin Dashboard</title>
+    <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; }
-        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 0; margin-bottom: 30px; }
+        :root {
+            --sidebar-width: 260px;
+            --primary-color: #1a237e;
+            --secondary-color: #3f51b5;
+            --bg-light: #f4f7fe;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Inter', -apple-system, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styling */
+        #sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: var(--primary-color);
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        #sidebar .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        #sidebar ul.nav-links {
+            padding: 20px 0;
+            list-style: none;
+        }
+
+        #sidebar ul.nav-links li {
+            padding: 10px 25px;
+            transition: all 0.2s;
+        }
+
+        #sidebar ul.nav-links li:hover, #sidebar ul.nav-links li.active {
+            background: rgba(255,255,255,0.1);
+            cursor: pointer;
+        }
+
+        #sidebar ul.nav-links li a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        #sidebar ul.nav-links li.active a, #sidebar ul.nav-links li:hover a {
+            color: white;
+        }
+
+        #sidebar ul.nav-links li i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        #content {
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            transition: all 0.3s;
+        }
+
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: none;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card .icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-card.students .icon-box { background: #e3f2fd; color: #1976d2; }
+        .stat-card.courses .icon-box { background: #f3e5f5; color: #7b1fa2; }
+        .stat-card.teachers .icon-box { background: #fff3e0; color: #f57c00; }
+        .stat-card.classes .icon-box { background: #e8f5e9; color: #388e3c; }
+
+        .card-title-sm {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        /* Module Styles */
+        .module-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .module-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .data-table-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
     </style>
 </head>
 <body>
-    <div class="hero text-center">
-        <h1>Japanese Language Center</h1>
-        <p>Hệ thống Quản lý Đào tạo Trung tâm Tiếng Nhật</p>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h4><i class="fas fa-torii-gate me-2"></i> NihonCenter</h4>
+        </div>
+        <ul class="nav-links">
+            <li class="active" onclick="showModule('dashboard', this)">
+                <a href="#"><i class="fas fa-home"></i> Tổng quan</a>
+            </li>
+            <li onclick="showModule('courses', this)">
+                <a href="#"><i class="fas fa-book"></i> Khóa học</a>
+            </li>
+            <li onclick="showModule('students', this)">
+                <a href="#"><i class="fas fa-user-graduate"></i> Học viên</a>
+            </li>
+            <li onclick="showModule('teachers', this)">
+                <a href="#"><i class="fas fa-chalkboard-teacher"></i> Giáo viên</a>
+            </li>
+            <li onclick="showModule('classes', this)">
+                <a href="#"><i class="fas fa-school"></i> Lớp học</a>
+            </li>
+        </ul>
     </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Khóa học</h5>
-                        <p class="card-text">Quản lý danh sách các khóa học từ cơ bản đến nâng cao.</p>
-                        <a href="/api/khoahoc" class="btn btn-primary">Xem API Khóa học</a>
+    <!-- Main Content -->
+    <div id="content">
+        <!-- Top Navbar -->
+        <nav class="navbar navbar-expand-lg d-flex justify-content-between align-items-center">
+            <h4 id="module-title" class="mb-0">Tổng quan hệ thống</h4>
+            <div class="user-profile d-flex align-items-center">
+                <span class="me-3">Admin User</span>
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=random" class="rounded-circle" width="40" alt="Profile">
+            </div>
+        </nav>
+
+        <!-- Dashboard Module -->
+        <div id="dashboard-module" class="module-content active">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="stat-card students">
+                        <div class="icon-box"><i class="fas fa-user-graduate fs-4"></i></div>
+                        <div class="card-title-sm">Tổng học viên</div>
+                        <div class="card-value" id="stat-students">0</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card courses">
+                        <div class="icon-box"><i class="fas fa-book fs-4"></i></div>
+                        <div class="card-title-sm">Khóa học</div>
+                        <div class="card-value" id="stat-courses">0</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card teachers">
+                        <div class="icon-box"><i class="fas fa-chalkboard-teacher fs-4"></i></div>
+                        <div class="card-title-sm">Giáo viên</div>
+                        <div class="card-value" id="stat-teachers">0</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card classes">
+                        <div class="icon-box"><i class="fas fa-school fs-4"></i></div>
+                        <div class="card-title-sm">Lớp học</div>
+                        <div class="card-value" id="stat-classes">0</div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Giáo viên</h5>
-                        <p class="card-text">Danh sách giảng viên và trình độ chuyên môn.</p>
-                        <button class="btn btn-secondary" disabled>Sắp ra mắt</button>
+
+            <div class="row mt-5">
+                <div class="col-md-8">
+                    <div class="data-table-card">
+                        <h5 class="mb-4">Thông báo mới nhất</h5>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> Chào mừng đến với hệ thống quản lý trung tâm tiếng Nhật!
+                        </div>
+                        <p class="text-muted">Hệ thống đang hoạt động bình thường. Bạn có thể bắt đầu quản lý các thông tin ở thanh bên trái.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="data-table-card">
+                        <h5 class="mb-4">Thao tác nhanh</h5>
+                        <button class="btn btn-primary w-100 mb-2" onclick="showModule('courses')">Thêm khóa học mới</button>
+                        <button class="btn btn-outline-secondary w-100" onclick="showModule('students')">Danh sách học viên</button>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Học viên</h5>
-                        <p class="card-text">Thông tin học viên và điểm tích lũy.</p>
-                        <button class="btn btn-secondary" disabled>Sắp ra mắt</button>
-                    </div>
+        </div>
+
+        <!-- Courses Module -->
+        <div id="courses-module" class="module-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Danh sách Khóa học</h3>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#courseModal">
+                    <i class="fas fa-plus me-2"></i> Thêm khóa học
+                </button>
+            </div>
+            <div class="data-table-card">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã KH</th>
+                                <th>Tên khóa học</th>
+                                <th>Cấp độ</th>
+                                <th>Học phí</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="courses-table-body">
+                            <!-- Data loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Module -->
+        <div id="students-module" class="module-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Quản lý Học viên</h3>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentModal">
+                    <i class="fas fa-plus me-2"></i> Thêm học viên
+                </button>
+            </div>
+            <div class="data-table-card">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã HV</th>
+                                <th>Họ tên</th>
+                                <th>Email</th>
+                                <th>SĐT</th>
+                                <th>Điểm</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table-body">
+                            <!-- Data loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teachers Module -->
+        <div id="teachers-module" class="module-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Giảng viên</h3>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#teacherModal">
+                    <i class="fas fa-plus me-2"></i> Thêm giáo viên
+                </button>
+            </div>
+            <div class="data-table-card">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã GV</th>
+                                <th>Họ tên</th>
+                                <th>Trình độ</th>
+                                <th>Chuyên môn</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teachers-table-body">
+                            <!-- Data loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Classes Module -->
+        <div id="classes-module" class="module-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Quản lý Lớp học</h3>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#classModal">
+                    <i class="fas fa-plus me-2"></i> Mở lớp mới
+                </button>
+            </div>
+            <div class="data-table-card">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã Lớp</th>
+                                <th>Tên Lớp</th>
+                                <th>Phòng</th>
+                                <th>Khóa học</th>
+                                <th>Giáo viên</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="classes-table-body">
+                            <!-- Data loaded via JS -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="text-center mt-5 py-4 border-top">
-        <p>&copy; 2026 Japanese Language Center Project</p>
-    </footer>
+    <!-- Modals -->
+    <!-- ... (Previous modals) ... -->
+
+    <!-- Teacher Modal -->
+    <div class="modal fade" id="teacherModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Giáo viên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="teacherForm">
+                        <div class="mb-3">
+                            <label class="form-label">Mã giáo viên</label>
+                            <input type="text" class="form-control" id="teacherMaGV" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Họ tên</label>
+                            <input type="text" class="form-control" id="teacherHoTen" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Trình độ (VD: N1, Thạc sĩ)</label>
+                            <input type="text" class="form-control" id="teacherTrinhDo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Chuyên môn</label>
+                            <input type="text" class="form-control" id="teacherChuyenMon" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="saveTeacher()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class Modal -->
+    <div class="modal fade" id="classModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Lớp học</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="classForm">
+                        <div class="mb-3">
+                            <label class="form-label">Mã lớp</label>
+                            <input type="text" class="form-control" id="classMaLop" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tên lớp</label>
+                            <input type="text" class="form-control" id="classTenLop" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phòng học</label>
+                            <input type="text" class="form-control" id="classPhongHoc">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Khóa học</label>
+                            <select class="form-select" id="classMaKH" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Giáo viên</label>
+                            <select class="form-select" id="classMaGV" required></select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="saveClass()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals (Phase 3) -->
+    <!-- Course Modal -->
+    <div class="modal fade" id="courseModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Khóa học</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="courseForm">
+                        <div class="mb-3">
+                            <label class="form-label">Mã khóa học</label>
+                            <input type="text" class="form-control" id="courseMaKH" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tên khóa học</label>
+                            <input type="text" class="form-control" id="courseTenKH" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cấp độ (1-5)</label>
+                            <input type="number" class="form-control" id="courseCapDo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Học phí</label>
+                            <input type="number" class="form-control" id="courseHocPhi" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCourse()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Modal -->
+    <div class="modal fade" id="studentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Học viên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="studentForm">
+                        <div class="mb-3">
+                            <label class="form-label">Mã học viên</label>
+                            <input type="text" class="form-control" id="studentMaHV" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Họ tên</label>
+                            <input type="text" class="form-control" id="studentHoTen" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="studentEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="text" class="form-control" id="studentSDT">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="saveStudent()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Thông báo</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toast-body">
+                Thao tác thành công!
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // UI Helpers
+        const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+        function showToast(msg) {
+            document.getElementById('toast-body').innerText = msg;
+            toast.show();
+        }
+
+        // Module management
+        function showModule(module, el) {
+            // Update sidebar
+            document.querySelectorAll('#sidebar li').forEach(li => li.classList.remove('active'));
+            if (el) {
+                el.classList.add('active');
+            } else {
+                // Find by text if el is not provided (for window.onload or direct calls)
+                const items = document.querySelectorAll('#sidebar li');
+                items.forEach(li => {
+                    if (li.innerText.toLowerCase().includes(module.toLowerCase())) li.classList.add('active');
+                });
+            }
+
+            // Hide all modules
+            document.querySelectorAll('.module-content').forEach(m => m.classList.remove('active'));
+            
+            // Show target module
+            const target = document.getElementById(module + '-module');
+            if (target) target.classList.add('active');
+
+            // Update title
+            const titles = {
+                'dashboard': 'Tổng quan hệ thống',
+                'courses': 'Quản lý Khóa học',
+                'students': 'Quản lý Học viên',
+                'teachers': 'Quản lý Giáo viên',
+                'classes': 'Quản lý Lớp học'
+            };
+            document.getElementById('module-title').innerText = titles[module] || 'Hệ thống Quản lý';
+
+            // Load data
+            if (module === 'dashboard') loadStats();
+            if (module === 'courses') loadCourses();
+            if (module === 'students') loadStudents();
+            if (module === 'teachers') loadTeachers();
+            if (module === 'classes') loadClasses();
+        }
+
+        // API Calls
+        async function loadStats() {
+            const res = await fetch('/api/stats');
+            const data = await res.json();
+            document.getElementById('stat-students').innerText = data.totalStudents;
+            document.getElementById('stat-courses').innerText = data.totalCourses;
+            document.getElementById('stat-teachers').innerText = data.totalTeachers;
+            document.getElementById('stat-classes').innerText = data.totalClasses;
+        }
+
+        async function loadCourses() {
+            const res = await fetch('/api/khoahoc');
+            const data = await res.json();
+            const tbody = document.getElementById('courses-table-body');
+            tbody.innerHTML = data.map(kh => `
+                <tr>
+                    <td>${kh.maKH}</td>
+                    <td>${kh.tenKH}</td>
+                    <td>N${kh.capDo}</td>
+                    <td>${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(kh.hocPhi)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info me-1"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteCourse('${kh.maKH}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Update select options for classes
+            const select = document.getElementById('classMaKH');
+            if (select) select.innerHTML = data.map(kh => `<option value="${kh.maKH}">${kh.tenKH}</option>`).join('');
+        }
+
+        async function loadStudents() {
+            const res = await fetch('/api/hocvien');
+            const data = await res.json();
+            const tbody = document.getElementById('students-table-body');
+            tbody.innerHTML = data.map(hv => `
+                <tr>
+                    <td>${hv.maHV}</td>
+                    <td>${hv.hoTen}</td>
+                    <td>${hv.email}</td>
+                    <td>${hv.sdt || '-'}</td>
+                    <td>${hv.tongDiemThuong}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info me-1"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteStudent('${hv.maHV}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadTeachers() {
+            const res = await fetch('/api/giaovien');
+            const data = await res.json();
+            const tbody = document.getElementById('teachers-table-body');
+            tbody.innerHTML = data.map(gv => `
+                <tr>
+                    <td>${gv.maGV}</td>
+                    <td>${gv.hoTen}</td>
+                    <td>${gv.trinhDo}</td>
+                    <td>${gv.chuyenMon}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info me-1"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteTeacher('${gv.maGV}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Update select options for classes
+            const select = document.getElementById('classMaGV');
+            if (select) select.innerHTML = data.map(gv => `<option value="${gv.maGV}">${gv.hoTen}</option>`).join('');
+        }
+
+        async function loadClasses() {
+            const res = await fetch('/api/lophoc');
+            const data = await res.json();
+            const tbody = document.getElementById('classes-table-body');
+            tbody.innerHTML = data.map(lh => `
+                <tr>
+                    <td>${lh.maLop}</td>
+                    <td>${lh.tenLop}</td>
+                    <td>${lh.phongHoc || '-'}</td>
+                    <td>${lh.khoaHoc ? lh.khoaHoc.tenKH : '-'}</td>
+                    <td>${lh.giaoVien ? lh.giaoVien.hoTen : '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info me-1"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteClass('${lh.maLop}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Pre-load dependencies for the modal
+            loadCourses();
+            loadTeachers();
+        }
+
+        // Save functions
+        async function saveCourse() {
+            const course = {
+                maKH: document.getElementById('courseMaKH').value,
+                tenKH: document.getElementById('courseTenKH').value,
+                capDo: parseInt(document.getElementById('courseCapDo').value),
+                hocPhi: parseFloat(document.getElementById('courseHocPhi').value)
+            };
+            await fetch('/api/khoahoc', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(course)
+            });
+            bootstrap.Modal.getInstance(document.getElementById('courseModal')).hide();
+            showToast('Đã lưu khóa học thành công!');
+            loadCourses();
+        }
+
+        async function saveStudent() {
+            const student = {
+                maHV: document.getElementById('studentMaHV').value,
+                hoTen: document.getElementById('studentHoTen').value,
+                email: document.getElementById('studentEmail').value,
+                sdt: document.getElementById('studentSDT').value,
+                tongDiemThuong: 0
+            };
+            await fetch('/api/hocvien', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(student)
+            });
+            bootstrap.Modal.getInstance(document.getElementById('studentModal')).hide();
+            showToast('Đã lưu học viên thành công!');
+            loadStudents();
+        }
+
+        async function saveTeacher() {
+            const teacher = {
+                maGV: document.getElementById('teacherMaGV').value,
+                hoTen: document.getElementById('teacherHoTen').value,
+                trinhDo: document.getElementById('teacherTrinhDo').value,
+                chuyenMon: document.getElementById('teacherChuyenMon').value
+            };
+            await fetch('/api/giaovien', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(teacher)
+            });
+            bootstrap.Modal.getInstance(document.getElementById('teacherModal')).hide();
+            showToast('Đã lưu giáo viên thành công!');
+            loadTeachers();
+        }
+
+        async function saveClass() {
+            const lopHoc = {
+                maLop: document.getElementById('classMaLop').value,
+                tenLop: document.getElementById('classTenLop').value,
+                phongHoc: document.getElementById('classPhongHoc').value,
+                khoaHoc: { maKH: document.getElementById('classMaKH').value },
+                giaoVien: { maGV: document.getElementById('classMaGV').value }
+            };
+            await fetch('/api/lophoc', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(lopHoc)
+            });
+            bootstrap.Modal.getInstance(document.getElementById('classModal')).hide();
+            showToast('Đã mở lớp học thành công!');
+            loadClasses();
+        }
+
+        // Delete functions
+        async function deleteCourse(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa khóa học này?')) {
+                await fetch('/api/khoahoc/' + id, { method: 'DELETE' });
+                showToast('Đã xóa khóa học.');
+                loadCourses();
+            }
+        }
+
+        async function deleteStudent(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa học viên này?')) {
+                await fetch('/api/hocvien/' + id, { method: 'DELETE' });
+                showToast('Đã xóa học viên.');
+                loadStudents();
+            }
+        }
+
+        async function deleteTeacher(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa giáo viên này?')) {
+                await fetch('/api/giaovien/' + id, { method: 'DELETE' });
+                showToast('Đã xóa giáo viên.');
+                loadTeachers();
+            }
+        }
+
+        async function deleteClass(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa lớp học này?')) {
+                await fetch('/api/lophoc/' + id, { method: 'DELETE' });
+                showToast('Đã xóa lớp học.');
+                loadClasses();
+            }
+        }
+
+        // Initial load
+        window.onload = loadStats;
+    </script>
 </body>
 </html>
