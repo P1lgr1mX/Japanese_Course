@@ -1,7 +1,7 @@
 com/center/model/HocVien.class
 com/center/service/GiaoVienService.class
-com/center/model/BaiTap.class
 com/center/controller/LopHocController.class
+com/center/model/BaiTap.class
 com/center/repository/LopHocRepository.class
 com/center/controller/HocVienController.class
 com/center/model/GiaoVien.class
@@ -19,7 +19,7 @@ com/center/repository/LamBaiRepository.class
 com/center/repository/GiaoVienRepository.class
 com/center/repository/LichSuDiemRepository.class
 com/center/JapaneseCenterApplication.class
-com/center/model/LamBai.class
 com/center/controller/KhoaHocController.class
+com/center/model/LamBai.class
 com/center/model/LopHoc.class
 com/center/service/LopHocService.class
