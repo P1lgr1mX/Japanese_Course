@@ -1,7 +1,7 @@
 package com.center.controller;
 
 import com.center.model.HocVien;
-import com.center.repository.HocVienRepository;
+import com.center.service.HocVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,39 +12,39 @@ import java.util.List;
 public class HocVienController {
 
     @Autowired
-    private HocVienRepository hocVienRepository;
+    private HocVienService hocVienService;
 
     @GetMapping
     public List<HocVien> getAllHocVien() {
-        return hocVienRepository.findAll();
+        return hocVienService.findAll();
     }
 
     @PostMapping
     public HocVien createHocVien(@RequestBody HocVien hocVien) {
-        return hocVienRepository.save(hocVien);
+        return hocVienService.save(hocVien);
     }
 
     @GetMapping("/{id}")
     public HocVien getHocVienById(@PathVariable String id) {
-        return hocVienRepository.findById(id).orElse(null);
+        return hocVienService.findById(id);
     }
 
     @PutMapping("/{id}")
     public HocVien updateHocVien(@PathVariable String id, @RequestBody HocVien hocVienDetails) {
-        HocVien hocVien = hocVienRepository.findById(id).orElse(null);
+        HocVien hocVien = hocVienService.findById(id);
         if (hocVien != null) {
             hocVien.setHoTen(hocVienDetails.getHoTen());
             hocVien.setNgaySinh(hocVienDetails.getNgaySinh());
             hocVien.setEmail(hocVienDetails.getEmail());
             hocVien.setSdt(hocVienDetails.getSdt());
             hocVien.setTongDiemThuong(hocVienDetails.getTongDiemThuong());
-            return hocVienRepository.save(hocVien);
+            return hocVienService.save(hocVien);
         }
         return null;
     }
 
     @DeleteMapping("/{id}")
     public void deleteHocVien(@PathVariable String id) {
-        hocVienRepository.deleteById(id);
+        hocVienService.deleteById(id);
     }
 }
