@@ -173,6 +173,15 @@
             <li onclick="showModule('classes', this)">
                 <a href="#"><i class="fas fa-school"></i> Lớp học</a>
             </li>
+            <li onclick="showModule('attendance', this)">
+                <a href="#"><i class="fas fa-calendar-check"></i> Điểm danh</a>
+            </li>
+            <li onclick="showModule('billing', this)">
+                <a href="#"><i class="fas fa-file-invoice-dollar"></i> Hóa đơn</a>
+            </li>
+            <li onclick="showModule('rewards', this)">
+                <a href="#"><i class="fas fa-gift"></i> Đổi thưởng</a>
+            </li>
         </ul>
     </div>
 
@@ -353,6 +362,111 @@
                 </div>
             </div>
         </div>
+
+        <!-- Attendance Module -->
+        <div id="attendance-module" class="module-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Điểm danh Lớp học</h3>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#attendanceModal">
+                    <i class="fas fa-check me-2"></i> Ghi điểm danh
+                </button>
+            </div>
+            <div class="data-table-card">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Học viên</th>
+                                <th>Lớp</th>
+                                <th>Ngày học</th>
+                                <th>Trạng thái</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-table-body">
+                            <!-- Data loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Billing Module -->
+        <div id="billing-module" class="module-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Hóa đơn & Học phí</h3>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#billingModal">
+                    <i class="fas fa-plus me-2"></i> Tạo hóa đơn
+                </button>
+            </div>
+            <div class="data-table-card">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã HD</th>
+                                <th>Học viên</th>
+                                <th>Lớp</th>
+                                <th>Phải đóng</th>
+                                <th>Đã đóng</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="billing-table-body">
+                            <!-- Data loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rewards Module -->
+        <div id="rewards-module" class="module-content">
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Danh mục Vật phẩm</h3>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#vatPhamModal">
+                            <i class="fas fa-plus me-2"></i> Thêm vật phẩm
+                        </button>
+                    </div>
+                    <div class="data-table-card">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tên VP</th>
+                                    <th>Điểm</th>
+                                    <th>Tồn</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vatpham-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Lịch sử Đổi thưởng</h3>
+                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#doithuongModal">
+                            <i class="fas fa-exchange-alt me-2"></i> Đổi thưởng mới
+                        </button>
+                    </div>
+                    <div class="data-table-card">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Học viên</th>
+                                    <th>Vật phẩm</th>
+                                    <th>Ngày đổi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="doithuong-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modals -->
@@ -507,6 +621,167 @@
         </div>
     </div>
 
+    <!-- Attendance Modal -->
+    <div class="modal fade" id="attendanceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ghi điểm danh</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="attendanceForm">
+                        <div class="mb-3">
+                            <label class="form-label">Học viên</label>
+                            <select class="form-select" id="attMaHV" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Lớp học</label>
+                            <select class="form-select" id="attMaLop" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ngày học</label>
+                            <input type="date" class="form-control" id="attNgayHoc" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Trạng thái</label>
+                            <select class="form-select" id="attTrangThai">
+                                <option value="Có mặt">Có mặt</option>
+                                <option value="Đi muộn">Đi muộn</option>
+                                <option value="Vắng phép">Vắng phép</option>
+                                <option value="Vắng không phép">Vắng không phép</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ghi chú</label>
+                            <input type="text" class="form-control" id="attGhiChu">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAttendance()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Billing Modal -->
+    <div class="modal fade" id="billingModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tạo hóa đơn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="billingForm">
+                        <div class="mb-3">
+                            <label class="form-label">Mã hóa đơn</label>
+                            <input type="text" class="form-control" id="billMaHD" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Học viên</label>
+                            <select class="form-select" id="billMaHV" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Lớp học</label>
+                            <select class="form-select" id="billMaLop" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số tiền phải đóng</label>
+                            <input type="number" class="form-control" id="billSoTienPhai" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số tiền đã đóng</label>
+                            <input type="number" class="form-control" id="billSoTienDa" value="0">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Trạng thái</label>
+                            <select class="form-select" id="billTrangThai">
+                                <option value="Chưa thanh toán">Chưa thanh toán</option>
+                                <option value="Thanh toán một phần">Thanh toán một phần</option>
+                                <option value="Đã hoàn thành">Đã hoàn thành</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="saveBilling()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vat Pham Modal -->
+    <div class="modal fade" id="vatPhamModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Vật phẩm đổi thưởng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="vatPhamForm">
+                        <div class="mb-3">
+                            <label class="form-label">Mã vật phẩm</label>
+                            <input type="text" class="form-control" id="vpMaVP" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tên vật phẩm</label>
+                            <input type="text" class="form-control" id="vpTenVP" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số điểm quy đổi</label>
+                            <input type="number" class="form-control" id="vpDiem" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số lượng tồn kho</label>
+                            <input type="number" class="form-control" id="vpTon" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="saveVatPham()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doi Thuong Modal -->
+    <div class="modal fade" id="doithuongModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thực hiện đổi thưởng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="doithuongForm">
+                        <div class="mb-3">
+                            <label class="form-label">Mã giao dịch</label>
+                            <input type="text" class="form-control" id="dtMaGD" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Học viên</label>
+                            <select class="form-select" id="dtMaHV" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Vật phẩm</label>
+                            <select class="form-select" id="dtMaVP" required></select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="saveDoiThuong()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -557,7 +832,10 @@
                 'courses': 'Quản lý Khóa học',
                 'students': 'Quản lý Học viên',
                 'teachers': 'Quản lý Giáo viên',
-                'classes': 'Quản lý Lớp học'
+                'classes': 'Quản lý Lớp học',
+                'attendance': 'Điểm danh học viên',
+                'billing': 'Hóa đơn & Học phí',
+                'rewards': 'Hệ thống đổi thưởng'
             };
             document.getElementById('module-title').innerText = titles[module] || 'Hệ thống Quản lý';
 
@@ -567,6 +845,181 @@
             if (module === 'students') loadStudents();
             if (module === 'teachers') loadTeachers();
             if (module === 'classes') loadClasses();
+            if (module === 'attendance') loadAttendance();
+            if (module === 'billing') loadBilling();
+            if (module === 'rewards') loadRewards();
+        }
+
+        // New Loaders
+        async function loadAttendance() {
+            const res = await fetch('/api/diemdanh');
+            const data = await res.json();
+            const tbody = document.getElementById('attendance-table-body');
+            tbody.innerHTML = data.map(att => `
+                <tr>
+                    <td>${att.hocVien.hoTen}</td>
+                    <td>${att.lopHoc.tenLop}</td>
+                    <td>${att.ngayHoc}</td>
+                    <td><span class="badge ${att.trangThai === 'Có mặt' ? 'bg-success' : 'bg-warning'}">${att.trangThai}</span></td>
+                    <td>${att.ghiChu || '-'}</td>
+                </tr>
+            `).join('');
+            
+            // Fill selects
+            const hvRes = await fetch('/api/hocvien');
+            const hvData = await hvRes.json();
+            document.getElementById('attMaHV').innerHTML = hvData.map(hv => `<option value="${hv.maHV}">${hv.hoTen}</option>`).join('');
+            
+            const lhRes = await fetch('/api/lophoc');
+            const lhData = await lhRes.json();
+            document.getElementById('attMaLop').innerHTML = lhData.map(lh => `<option value="${lh.maLop}">${lh.tenLop}</option>`).join('');
+        }
+
+        async function loadBilling() {
+            const res = await fetch('/api/hoadon');
+            const data = await res.json();
+            const tbody = document.getElementById('billing-table-body');
+            tbody.innerHTML = data.map(bill => `
+                <tr>
+                    <td>${bill.maHD}</td>
+                    <td>${bill.hocVien.hoTen}</td>
+                    <td>${bill.lopHoc.tenLop}</td>
+                    <td>${new Intl.NumberFormat('vi-VN').format(bill.soTienPhaiDong)}</td>
+                    <td>${new Intl.NumberFormat('vi-VN').format(bill.soTienDaDong)}</td>
+                    <td><span class="badge ${bill.trangThai === 'Đã hoàn thành' ? 'bg-success' : 'bg-danger'}">${bill.trangThai}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="deleteBilling('${bill.maHD}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Fill selects
+            const hvRes = await fetch('/api/hocvien');
+            const hvData = await hvRes.json();
+            document.getElementById('billMaHV').innerHTML = hvData.map(hv => `<option value="${hv.maHV}">${hv.hoTen}</option>`).join('');
+            
+            const lhRes = await fetch('/api/lophoc');
+            const lhData = await lhRes.json();
+            document.getElementById('billMaLop').innerHTML = lhData.map(lh => `<option value="${lh.maLop}">${lh.tenLop}</option>`).join('');
+        }
+
+        async function loadRewards() {
+            // Load Vat Pham
+            const vpRes = await fetch('/api/vatpham');
+            const vpData = await vpRes.json();
+            document.getElementById('vatpham-table-body').innerHTML = vpData.map(vp => `
+                <tr>
+                    <td>${vp.tenVP}</td>
+                    <td>${vp.soDiemQuyDoi}</td>
+                    <td>${vp.soLuongTonKho}</td>
+                    <td><button class="btn btn-sm btn-danger" onclick="deleteVatPham('${vp.maVP}')"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+
+            // Load History
+            const dtRes = await fetch('/api/doithuong');
+            const dtData = await dtRes.json();
+            document.getElementById('doithuong-table-body').innerHTML = dtData.map(dt => `
+                <tr>
+                    <td>${dt.hocVien.hoTen}</td>
+                    <td>${dt.vatPham.tenVP}</td>
+                    <td>${new Date(dt.ngayDoi).toLocaleDateString('vi-VN')}</td>
+                </tr>
+            `).join('');
+
+            // Fill selects for Doi Thuong
+            const hvRes = await fetch('/api/hocvien');
+            const hvData = await hvRes.json();
+            document.getElementById('dtMaHV').innerHTML = hvData.map(hv => `<option value="${hv.maHV}">${hv.hoTen}</option>`).join('');
+            document.getElementById('dtMaVP').innerHTML = vpData.map(vp => `<option value="${vp.maVP}">${vp.tenVP}</option>`).join('');
+        }
+
+        // New Save Functions
+        async function saveAttendance() {
+            const att = {
+                hocVien: { maHV: document.getElementById('attMaHV').value },
+                lopHoc: { maLop: document.getElementById('attMaLop').value },
+                ngayHoc: document.getElementById('attNgayHoc').value,
+                trangThai: document.getElementById('attTrangThai').value,
+                ghiChu: document.getElementById('attGhiChu').value
+            };
+            await fetch('/api/diemdanh', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(att)
+            });
+            bootstrap.Modal.getInstance(document.getElementById('attendanceModal')).hide();
+            showToast('Đã ghi điểm danh!');
+            loadAttendance();
+        }
+
+        async function saveBilling() {
+            const bill = {
+                maHD: document.getElementById('billMaHD').value,
+                hocVien: { maHV: document.getElementById('billMaHV').value },
+                lopHoc: { maLop: document.getElementById('billMaLop').value },
+                soTienPhaiDong: parseFloat(document.getElementById('billSoTienPhai').value),
+                soTienDaDong: parseFloat(document.getElementById('billSoTienDa').value),
+                trangThai: document.getElementById('billTrangThai').value,
+                ngayThanhToan: new Date().toISOString().split('T')[0]
+            };
+            await fetch('/api/hoadon', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bill)
+            });
+            bootstrap.Modal.getInstance(document.getElementById('billingModal')).hide();
+            showToast('Đã tạo hóa đơn!');
+            loadBilling();
+        }
+
+        async function saveVatPham() {
+            const vp = {
+                maVP: document.getElementById('vpMaVP').value,
+                tenVP: document.getElementById('vpTenVP').value,
+                soDiemQuyDoi: parseFloat(document.getElementById('vpDiem').value),
+                soLuongTonKho: parseInt(document.getElementById('vpTon').value)
+            };
+            await fetch('/api/vatpham', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(vp)
+            });
+            bootstrap.Modal.getInstance(document.getElementById('vatPhamModal')).hide();
+            showToast('Đã thêm vật phẩm!');
+            loadRewards();
+        }
+
+        async function saveDoiThuong() {
+            const dt = {
+                maGD: document.getElementById('dtMaGD').value,
+                hocVien: { maHV: document.getElementById('dtMaHV').value },
+                vatPham: { maVP: document.getElementById('dtMaVP').value },
+                ngayDoi: new Date().toISOString(),
+                soDiemDaTru: 0 // Mocking for now, could fetch from VatPham
+            };
+            await fetch('/api/doithuong', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dt)
+            });
+            bootstrap.Modal.getInstance(document.getElementById('doithuongModal')).hide();
+            showToast('Đã thực hiện đổi thưởng!');
+            loadRewards();
+        }
+
+        async function deleteBilling(id) {
+            if (confirm('Xóa hóa đơn này?')) {
+                await fetch('/api/hoadon/' + id, { method: 'DELETE' });
+                loadBilling();
+            }
+        }
+
+        async function deleteVatPham(id) {
+            if (confirm('Xóa vật phẩm này?')) {
+                await fetch('/api/vatpham/' + id, { method: 'DELETE' });
+                loadRewards();
+            }
         }
 
         // API Calls
