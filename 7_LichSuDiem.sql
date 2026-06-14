@@ -1,0 +1,22 @@
+INSERT INTO LichSuDiem (MaHV, NgayThayDoi, SoDiem, LyDo) VALUES
+('HV001', '2026-06-15 11:00:00', 5.00, 'Hoàn thành bài tập BT001'),
+('HV002', '2026-06-16 15:00:00', 4.50, 'Hoàn thành bài tập BT001'),
+('HV004', '2026-06-18 17:00:00', 10.00, 'Hoàn thành bài tập BT005'),
+('HV005', '2026-06-20 08:00:00', -2.00, 'Nộp muộn bài tập BT001'),
+('HV007', '2026-06-25 09:00:00', 20.00, 'Hoàn thành bài tập BT006'),
+('HV011', '2026-06-21 08:00:00', 9.50, 'Hoàn thành bài tập BT018'),
+('HV013', '2026-06-22 09:00:00', 15.00, 'Hoàn thành bài tập BT017'),
+('HV016', '2026-06-28 10:00:00', 18.00, 'Hoàn thành bài tập BT020'),
+('HV001', '2026-06-10 08:00:00', 50.00, 'Điểm danh đầy đủ tháng 5'),
+('HV010', '2026-06-10 08:05:00', 75.00, 'Thành tích xuất sắc khóa N2'),
+('HV004', '2026-06-12 09:30:00', 25.00, 'Tham gia câu lạc bộ tiếng Nhật'),
+('HV007', '2026-06-12 09:45:00', 25.00, 'Tham gia câu lạc bộ tiếng Nhật'),
+('HV016', '2026-06-12 10:00:00', 25.00, 'Tham gia câu lạc bộ tiếng Nhật'),
+('HV002', '2026-06-14 14:00:00', 20.00, 'Hỗ trợ bạn học tập'),
+('HV015', '2026-06-14 14:15:00', 30.00, 'Hoàn thành thử thách Kanji'),
+('HV020', '2026-06-14 14:30:00', 30.00, 'Hoàn thành thử thách Kanji'),
+('HV007', '2026-06-15 16:00:00', 90.00, 'Giải nhất cuộc thi hùng biện'),
+('HV010', '2026-06-15 16:15:00', 80.00, 'Giải nhì cuộc thi hùng biện'),
+('HV016', '2026-06-15 16:30:00', 60.00, 'Giải ba cuộc thi hùng biện'),
+('HV013', '2026-06-16 10:00:00', 10.00, 'Phát biểu hăng hái trong giờ');
+-- Lưu ý: MaLS là SERIAL nên không cần chèn.

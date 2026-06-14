@@ -851,87 +851,115 @@
         }
 
         // New Loaders
+        async function fillStudentDropdowns(selectIds) {
+            try {
+                const res = await fetch('/api/hocvien');
+                const data = await res.json();
+                const options = data.length > 0 
+                    ? data.map(hv => `<option value="${hv.maHV}">${hv.hoTen} (${hv.maHV})</option>`).join('')
+                    : '<option value="">(Chưa có học viên nào)</option>';
+                selectIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = options;
+                });
+            } catch (e) { 
+                console.error("Error filling students:", e); 
+                selectIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = '<option value="">Lỗi tải dữ liệu</option>';
+                });
+            }
+        }
+
+        async function fillClassDropdowns(selectIds) {
+            try {
+                const res = await fetch('/api/lophoc');
+                const data = await res.json();
+                const options = data.length > 0
+                    ? data.map(lh => `<option value="${lh.maLop}">${lh.tenLop}</option>`).join('')
+                    : '<option value="">(Chưa có lớp nào)</option>';
+                selectIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = options;
+                });
+            } catch (e) { console.error("Error filling classes:", e); }
+        }
+
         async function loadAttendance() {
-            const res = await fetch('/api/diemdanh');
-            const data = await res.json();
-            const tbody = document.getElementById('attendance-table-body');
-            tbody.innerHTML = data.map(att => `
-                <tr>
-                    <td>${att.hocVien.hoTen}</td>
-                    <td>${att.lopHoc.tenLop}</td>
-                    <td>${att.ngayHoc}</td>
-                    <td><span class="badge ${att.trangThai === 'Có mặt' ? 'bg-success' : 'bg-warning'}">${att.trangThai}</span></td>
-                    <td>${att.ghiChu || '-'}</td>
-                </tr>
-            `).join('');
+            // Fill dropdowns first so they are ready for the modal
+            fillStudentDropdowns(['attMaHV']);
+            fillClassDropdowns(['attMaLop']);
             
-            // Fill selects
-            const hvRes = await fetch('/api/hocvien');
-            const hvData = await hvRes.json();
-            document.getElementById('attMaHV').innerHTML = hvData.map(hv => `<option value="${hv.maHV}">${hv.hoTen}</option>`).join('');
-            
-            const lhRes = await fetch('/api/lophoc');
-            const lhData = await lhRes.json();
-            document.getElementById('attMaLop').innerHTML = lhData.map(lh => `<option value="${lh.maLop}">${lh.tenLop}</option>`).join('');
+            try {
+                const res = await fetch('/api/diemdanh');
+                const data = await res.json();
+                const tbody = document.getElementById('attendance-table-body');
+                tbody.innerHTML = data.map(att => `
+                    <tr>
+                        <td>${att.hocVien?.hoTen || 'N/A'}</td>
+                        <td>${att.lopHoc?.tenLop || 'N/A'}</td>
+                        <td>${att.ngayHoc}</td>
+                        <td><span class="badge ${att.trangThai === 'Có mặt' ? 'bg-success' : 'bg-warning'}">${att.trangThai}</span></td>
+                        <td>${att.ghiChu || '-'}</td>
+                    </tr>
+                `).join('');
+            } catch (e) { console.error(e); }
         }
 
         async function loadBilling() {
-            const res = await fetch('/api/hoadon');
-            const data = await res.json();
-            const tbody = document.getElementById('billing-table-body');
-            tbody.innerHTML = data.map(bill => `
-                <tr>
-                    <td>${bill.maHD}</td>
-                    <td>${bill.hocVien.hoTen}</td>
-                    <td>${bill.lopHoc.tenLop}</td>
-                    <td>${new Intl.NumberFormat('vi-VN').format(bill.soTienPhaiDong)}</td>
-                    <td>${new Intl.NumberFormat('vi-VN').format(bill.soTienDaDong)}</td>
-                    <td><span class="badge ${bill.trangThai === 'Đã hoàn thành' ? 'bg-success' : 'bg-danger'}">${bill.trangThai}</span></td>
-                    <td>
-                        <button class="btn btn-sm btn-danger" onclick="deleteBilling('${bill.maHD}')"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // Fill selects
-            const hvRes = await fetch('/api/hocvien');
-            const hvData = await hvRes.json();
-            document.getElementById('billMaHV').innerHTML = hvData.map(hv => `<option value="${hv.maHV}">${hv.hoTen}</option>`).join('');
+            fillStudentDropdowns(['billMaHV']);
+            fillClassDropdowns(['billMaLop']);
             
-            const lhRes = await fetch('/api/lophoc');
-            const lhData = await lhRes.json();
-            document.getElementById('billMaLop').innerHTML = lhData.map(lh => `<option value="${lh.maLop}">${lh.tenLop}</option>`).join('');
+            try {
+                const res = await fetch('/api/hoadon');
+                const data = await res.json();
+                const tbody = document.getElementById('billing-table-body');
+                tbody.innerHTML = data.map(bill => `
+                    <tr>
+                        <td>${bill.maHD}</td>
+                        <td>${bill.hocVien?.hoTen || 'N/A'}</td>
+                        <td>${bill.lopHoc?.tenLop || 'N/A'}</td>
+                        <td>${new Intl.NumberFormat('vi-VN').format(bill.soTienPhaiDong || 0)}</td>
+                        <td>${new Intl.NumberFormat('vi-VN').format(bill.soTienDaDong || 0)}</td>
+                        <td><span class="badge ${bill.trangThai === 'Đã hoàn thành' ? 'bg-success' : 'bg-danger'}">${bill.trangThai}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" onclick="deleteBilling('${bill.maHD}')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) { console.error(e); }
         }
 
         async function loadRewards() {
-            // Load Vat Pham
-            const vpRes = await fetch('/api/vatpham');
-            const vpData = await vpRes.json();
-            document.getElementById('vatpham-table-body').innerHTML = vpData.map(vp => `
-                <tr>
-                    <td>${vp.tenVP}</td>
-                    <td>${vp.soDiemQuyDoi}</td>
-                    <td>${vp.soLuongTonKho}</td>
-                    <td><button class="btn btn-sm btn-danger" onclick="deleteVatPham('${vp.maVP}')"><i class="fas fa-trash"></i></button></td>
-                </tr>
-            `).join('');
+            fillStudentDropdowns(['dtMaHV']);
+            
+            try {
+                // Load Vat Pham
+                const vpRes = await fetch('/api/vatpham');
+                const vpData = await vpRes.json();
+                document.getElementById('vatpham-table-body').innerHTML = vpData.map(vp => `
+                    <tr>
+                        <td>${vp.tenVP}</td>
+                        <td>${vp.soDiemQuyDoi}</td>
+                        <td>${vp.soLuongTonKho}</td>
+                        <td><button class="btn btn-sm btn-danger" onclick="deleteVatPham('${vp.maVP}')"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                `).join('');
 
-            // Load History
-            const dtRes = await fetch('/api/doithuong');
-            const dtData = await dtRes.json();
-            document.getElementById('doithuong-table-body').innerHTML = dtData.map(dt => `
-                <tr>
-                    <td>${dt.hocVien.hoTen}</td>
-                    <td>${dt.vatPham.tenVP}</td>
-                    <td>${new Date(dt.ngayDoi).toLocaleDateString('vi-VN')}</td>
-                </tr>
-            `).join('');
+                // Fill VP select
+                document.getElementById('dtMaVP').innerHTML = vpData.map(vp => `<option value="${vp.maVP}">${vp.tenVP}</option>`).join('');
 
-            // Fill selects for Doi Thuong
-            const hvRes = await fetch('/api/hocvien');
-            const hvData = await hvRes.json();
-            document.getElementById('dtMaHV').innerHTML = hvData.map(hv => `<option value="${hv.maHV}">${hv.hoTen}</option>`).join('');
-            document.getElementById('dtMaVP').innerHTML = vpData.map(vp => `<option value="${vp.maVP}">${vp.tenVP}</option>`).join('');
+                // Load History
+                const dtRes = await fetch('/api/doithuong');
+                const dtData = await dtRes.json();
+                document.getElementById('doithuong-table-body').innerHTML = dtData.map(dt => `
+                    <tr>
+                        <td>${dt.hocVien?.hoTen || 'N/A'}</td>
+                        <td>${dt.vatPham?.tenVP || 'N/A'}</td>
+                        <td>${dt.ngayDoi ? new Date(dt.ngayDoi).toLocaleDateString('vi-VN') : '-'}</td>
+                    </tr>
+                `).join('');
+            } catch (e) { console.error(e); }
         }
 
         // New Save Functions

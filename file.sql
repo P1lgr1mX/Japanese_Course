@@ -70,3 +70,47 @@ CREATE TABLE LichSuDiem (
     LyDo VARCHAR(255) NOT NULL,
     CONSTRAINT fk_lichsu_hocvien FOREIGN KEY (MaHV) REFERENCES HocVien(MaHV) ON DELETE CASCADE
 );
+
+-- 8. Bảng DIEM_DANH (Điểm danh)
+CREATE TABLE DiemDanh (
+    MaHV VARCHAR(10),
+    MaLop VARCHAR(10),
+    NgayHoc DATE,
+    TrangThai VARCHAR(50) NOT NULL,
+    GhiChu VARCHAR(255),
+    PRIMARY KEY (MaHV, MaLop, NgayHoc),
+    CONSTRAINT fk_diemdanh_hocvien FOREIGN KEY (MaHV) REFERENCES HocVien(MaHV) ON DELETE CASCADE,
+    CONSTRAINT fk_diemdanh_lophoc FOREIGN KEY (MaLop) REFERENCES LopHoc(MaLop) ON DELETE CASCADE
+);
+
+-- 9. Bảng HOA_DON (Hóa đơn)
+CREATE TABLE HoaDon (
+    MaHD VARCHAR(10) PRIMARY KEY,
+    MaHV VARCHAR(10) NOT NULL,
+    MaLop VARCHAR(10) NOT NULL,
+    SoTienPhaiDong NUMERIC(12, 2),
+    SoTienDaDong NUMERIC(12, 2),
+    NgayThanhToan DATE,
+    TrangThai VARCHAR(50),
+    CONSTRAINT fk_hoadon_hocvien FOREIGN KEY (MaHV) REFERENCES HocVien(MaHV) ON DELETE RESTRICT,
+    CONSTRAINT fk_hoadon_lophoc FOREIGN KEY (MaLop) REFERENCES LopHoc(MaLop) ON DELETE RESTRICT
+);
+
+-- 10. Bảng VAT_PHAM (Vật phẩm đổi thưởng)
+CREATE TABLE VatPham (
+    MaVP VARCHAR(10) PRIMARY KEY,
+    TenVP VARCHAR(100) NOT NULL,
+    SoDiemQuyDoi DECIMAL(6, 2),
+    SoLuongTonKho INT
+);
+
+-- 11. Bảng LICH_SU_DOI_THUONG (Lịch sử đổi thưởng)
+CREATE TABLE LichSuDoiThuong (
+    MaGD VARCHAR(10) PRIMARY KEY,
+    MaHV VARCHAR(10) NOT NULL,
+    MaVP VARCHAR(10) NOT NULL,
+    NgayDoi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    SoDiemDaTru DECIMAL(6, 2),
+    CONSTRAINT fk_doithuong_hocvien FOREIGN KEY (MaHV) REFERENCES HocVien(MaHV) ON DELETE CASCADE,
+    CONSTRAINT fk_doithuong_vatpham FOREIGN KEY (MaVP) REFERENCES VatPham(MaVP) ON DELETE CASCADE
+);

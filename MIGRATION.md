@@ -7,11 +7,22 @@ To set up the database for the Japanese Language Center project, follow these st
 - A database created (e.g., `japanese_center`).
 
 ## 2. Initial Schema Setup
-Execute the [file.sql](file:///home/sanemy/pjCSDL/file.sql) script to create the tables, constraints, and relationships.
+Execute the [file.sql](file:///home/sanemy/pjCSDL/file.sql) script to create all tables, including:
+- **Core entities**: KhoaHoc, GiaoVien, LopHoc, HocVien, BaiTap.
+- **Relational/Tracking**: LamBai, LichSuDiem, DiemDanh, HoaDon.
+- **Gamification**: VatPham, LichSuDoiThuong.
 
 ```bash
 psql -U your_user -d japanese_center -f /home/sanemy/pjCSDL/file.sql
 ```
+
+## 3. Data Population
+After creating the schema, you should execute the data population scripts in order:
+1. `1_KhoaHoc.sql` to `7_LichSuDiem.sql`
+2. `8_DiemDanh.sql`
+3. `9_HoaDon.sql`
+4. `10_VatPham.sql`
+5. `11_LichSuDoiThuong.sql`
 
 ## 3. Backend Integration
 The project is set up using **Spring Boot** with **JPA/Hibernate**.
