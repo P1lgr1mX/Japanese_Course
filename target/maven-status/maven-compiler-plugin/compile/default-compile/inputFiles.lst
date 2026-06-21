@@ -1,9 +1,11 @@
 /home/sanemy/Japanese_Course-/src/main/java/com/center/controller/VatPhamController.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/repository/LichSuDoiThuongRepository.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/service/DiemDanhService.java
+/home/sanemy/Japanese_Course-/src/main/java/com/center/service/LamBaiService.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/controller/HocVienController.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/model/BaiTap.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/repository/LamBaiRepository.java
+/home/sanemy/Japanese_Course-/src/main/java/com/center/controller/BaiTapController.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/service/HocVienService.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/controller/GiaoVienController.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/model/HoaDon.java
@@ -17,10 +19,12 @@
 /home/sanemy/Japanese_Course-/src/main/java/com/center/model/LamBaiId.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/controller/LopHocController.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/repository/BaiTapRepository.java
+/home/sanemy/Japanese_Course-/src/main/java/com/center/service/LichSuDiemService.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/JapaneseCenterApplication.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/model/LopHoc.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/service/VatPhamService.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/repository/VatPhamRepository.java
+/home/sanemy/Japanese_Course-/src/main/java/com/center/service/BaiTapService.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/model/DiemDanh.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/model/LichSuDoiThuong.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/controller/HoaDonController.java
@@ -36,7 +40,9 @@
 /home/sanemy/Japanese_Course-/src/main/java/com/center/repository/KhoaHocRepository.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/controller/DiemDanhController.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/model/KhoaHoc.java
+/home/sanemy/Japanese_Course-/src/main/java/com/center/controller/LamBaiController.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/repository/LichSuDiemRepository.java
+/home/sanemy/Japanese_Course-/src/main/java/com/center/controller/LichSuDiemController.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/controller/StatsController.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/service/LichSuDoiThuongService.java
 /home/sanemy/Japanese_Course-/src/main/java/com/center/service/KhoaHocService.java
